@@ -7,6 +7,7 @@ let snakeArr = [{ row: 8, col: 3 }]
 let snakeHeadIndex = (snakeHeadPosition.row - 1) * 17 + snakeHeadPosition.col - 1;
 let foodScore = 0;
 let highScore = 0;
+let startX, startY;
 
 //Generate food at start
 generateFood()
@@ -42,7 +43,7 @@ let main = () => {
     if (snakeHeadIndex == foodIndex) {
         foodScore++;
         document.querySelector(".score").innerHTML = foodScore;
-        if(foodScore>highScore){
+        if (foodScore > highScore) {
             highScore = foodScore;
             document.querySelector(".highScore").innerHTML = highScore;
         }
@@ -102,6 +103,49 @@ document.addEventListener("keydown", (e) => {
             break;
     }
 })
+
+document.addEventListener('touchstart', function (e) {
+    startX = e.touches[0].pageX;
+    startY = e.touches[0].pageY;
+});
+
+document.addEventListener('touchmove', function (e) {
+    if (!startX || !startY) {
+        return;
+    }
+
+    let diffX = startX - e.touches[0].pageX;
+    let diffY = startY - e.touches[0].pageY;
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0) {
+            //left
+            if (snakeDirection.row !== 0 || snakeDirection.col !== 1) {
+                snakeDirection = { row: 0, col: -1 };
+            }
+        } else {
+            //right
+            if (snakeDirection.row !== 0 || snakeDirection.col !== -1) {
+                snakeDirection = { row: 0, col: 1 };
+            }
+        }
+    } else {
+        if (diffY > 0) {
+            //up
+            if (snakeDirection.row !== 1 || snakeDirection.col !== 0) {
+                snakeDirection = { row: -1, col: 0 };
+            }
+        } else {
+            //down
+            if (snakeDirection.row !== -1 || snakeDirection.col !== 0) {
+                snakeDirection = { row: 1, col: 0 };
+            }
+        }
+    }
+
+    startX = null;
+    startY = null;
+}, false);
 
 function generateFood() {
     let validPosition = false;
