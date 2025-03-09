@@ -8,6 +8,7 @@ let snakeHeadIndex = (snakeHeadPosition.row - 1) * 17 + snakeHeadPosition.col - 
 let foodScore = 0;
 let highScore = 0;
 let startX, startY;
+let volume = document.querySelector(".volume")
 
 //Generate food at start
 generateFood()
@@ -105,9 +106,10 @@ document.addEventListener("keydown", (e) => {
 })
 
 document.addEventListener('touchstart', function (e) {
+    e.preventDefault();
     startX = e.touches[0].pageX;
     startY = e.touches[0].pageY;
-});
+}, { passive: false });
 
 document.addEventListener('touchmove', function (e) {
     if (!startX || !startY) {
@@ -162,6 +164,17 @@ function generateFood() {
     }
     cells[foodIndex].classList.add("snakeFood")
 }
+
+volume.addEventListener("click",()=>{
+    if(volume.getAttribute("src") == "images/muteVolume.png"){
+        console.log("on")
+        volume.setAttribute("src", "images/volume.png")
+        
+    }else{
+        console.log("mute")
+        volume.setAttribute("src", "images/muteVolume.png")
+    }
+})
 
 document.querySelector(".playAgain").addEventListener("click", () => {
     document.querySelector(".gameOver").style.display = ""
